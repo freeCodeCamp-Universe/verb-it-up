@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verb It Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="phrasal-verbs.css">
+</head>
+<body>
+
+<header>
+  <h1>Verb It Up</h1>
+</header>
+
+<!-- ── Start screen ── -->
+<div id="screen-start" class="screen active">
+  <div class="start-wrap">
+    <div class="start-layout">
+      <div class="logo">
+        <h1>Verb It Up</h1>
+        <p>300+ phrasal verbs</p>
+      </div>
+    <div class="start-card">
+      <p class="tagline-main">Ready to verb it up?</p>
+      <p class="tagline-sub">Match each phrasal verb to its definition before time runs out.</p>
+
+      <ul class="how-to">
+        <li>💡 Drag a verb card onto its definition</li>
+        <li>👆 Or click a verb, then click a definition</li>
+        <li>🔢 5 verbs per round</li>
+      </ul>
+
+      <button class="btn btn-ghost" id="grammar-btn">📚 Grammar note</button>
+
+      <div class="time-section">
+        <p class="section-label">Time limit</p>
+        <div class="time-options">
+          <button class="time-btn active" data-time="0">No timer</button>
+          <button class="time-btn" data-time="30">30 s</button>
+          <button class="time-btn" data-time="60">60 s</button>
+          <button class="time-btn" data-time="90">90 s</button>
+        </div>
+      </div>
+
+      <div id="weak-section" class="weak-section" hidden>
+        <div class="weak-header">
+          <span>⚠️ Needs repetition</span>
+          <button class="weak-clear" id="weak-clear-btn">Clear</button>
+        </div>
+        <p id="weak-list" class="weak-list"></p>
+        <button class="btn btn-weak btn-lg" id="practice-btn">Repeat these verbs</button>
+      </div>
+
+      <button class="btn btn-primary btn-lg" id="start-btn">Start</button>
+    </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Game screen ── -->
+<div id="screen-game" class="screen">
+  <main>
+    <div class="game-toolbar">
+      <div class="score">Score: <strong id="score">0</strong> / <span id="total">5</span></div>
+      <div id="timer-display" class="timer-display"></div>
+      <button class="btn btn-outline" id="home-btn">&#8592; Home</button>
+    </div>
+
+    <p class="hint">Drag a phrasal verb onto its definition — or click a verb, then click a definition.</p>
+
+    <div class="columns">
+      <div>
+        <p class="col-label">Phrasal Verbs</p>
+        <div id="verbs-list"></div>
+      </div>
+      <div>
+        <p class="col-label">Definitions</p>
+        <div id="defs-list"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ── Grammar modal ── -->
+<div id="grammar-overlay" class="modal-overlay" hidden>
+  <div class="modal grammar-modal" role="dialog" aria-modal="true">
+    <h2>📚 Grammar note</h2>
+    <div class="grammar-body">
+      <p>A <strong>phrasal verb</strong> is a verb combined with a particle (preposition or adverb) that together carry a new meaning, often unrelated to the individual words.</p>
+      <ul>
+        <li>
+          <span class="li-label"><strong>Separable:</strong> the object can go between the verb and particle:</span><br>
+          <em>turn off the TV</em> → <em>turn the TV off</em>
+        </li>
+        <li>
+          <span class="li-label"><strong>Inseparable:</strong> the object must follow the full phrasal verb:</span><br>
+          <em>come across an old friend</em> ✓<br>
+          <em>come an old friend across</em> ✗
+        </li>
+        <li>
+          <span class="li-label"><strong>Intransitive:</strong> some take no object at all:</span><br>
+          <em>The engine broke down.</em>
+        </li>
+      </ul>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="grammar-close-btn">Got it</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Round summary modal ── -->
+<div id="summary-overlay" class="modal-overlay" hidden>
+  <div class="modal summary-modal" role="dialog" aria-modal="true">
+    <h2 class="summary-heading">🎉 Round complete</h2>
+    <p id="summary-meta" class="summary-meta"></p>
+    <ul id="summary-list" class="summary-list"></ul>
+    <div class="modal-actions">
+      <button class="btn btn-outline" id="summary-home-btn">Home</button>
+      <button class="btn btn-primary" id="summary-next-btn">Next Round</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Modal ── -->
+<div id="modal-overlay" class="modal-overlay" hidden>
+  <div class="modal" id="modal" role="dialog" aria-modal="true">
+    <h2 id="modal-title"></h2>
+    <p id="modal-msg"></p>
+    <div class="modal-actions" id="modal-actions"></div>
+  </div>
+</div>
+
+<script src="phrasal-verbs.js"></script>
+</body>
+</html>
