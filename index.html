@@ -31,7 +31,10 @@
         <li>🔢 5 verbs per round</li>
       </ul>
 
-      <button class="btn btn-ghost" id="grammar-btn">📚 Grammar note</button>
+      <div class="ghost-btns">
+        <button class="btn btn-ghost" id="grammar-btn">📚 Grammar note</button>
+        <button class="btn btn-ghost" id="verb-list-btn">📋 Phrasal verbs list</button>
+      </div>
 
       <div class="time-section">
         <p class="section-label">Time limit</p>
@@ -107,6 +110,25 @@
     </div>
     <div class="modal-actions">
       <button class="btn btn-primary" id="grammar-close-btn">Got it</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── Verb list modal ── -->
+<div id="verb-list-overlay" class="modal-overlay" hidden>
+  <div class="modal verb-list-modal" role="dialog" aria-modal="true">
+    <h2>📋 All Phrasal Verbs</h2>
+    <input type="text" id="verb-search" class="verb-search" placeholder="Search verbs or definitions…" autocomplete="off">
+    <div class="verb-list-scroll">
+      <table id="verb-table">
+        <thead>
+          <tr><th>Phrasal Verb</th><th>Definition</th></tr>
+        </thead>
+        <tbody id="verb-table-body"></tbody>
+      </table>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="verb-list-close-btn">Close</button>
     </div>
   </div>
 </div>

@@ -469,6 +469,39 @@ document.getElementById('grammar-overlay').addEventListener('click', e => {
   if (e.target === e.currentTarget) document.getElementById('grammar-overlay').setAttribute('hidden', '');
 });
 
+// ── Verb list modal ───────────────────────────────────────────────────────────
+
+function buildVerbTable(filter) {
+  const tbody = document.getElementById('verb-table-body');
+  const q = filter ? filter.toLowerCase() : '';
+  const rows = q ? DATA.filter(item => item.verb.includes(q) || item.def.includes(q)) : DATA;
+  tbody.innerHTML = '';
+  rows.forEach(item => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${item.verb}</td><td>${item.def}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+document.getElementById('verb-list-btn').addEventListener('click', () => {
+  document.getElementById('verb-search').value = '';
+  buildVerbTable('');
+  document.getElementById('verb-list-overlay').removeAttribute('hidden');
+  document.getElementById('verb-search').focus();
+});
+
+document.getElementById('verb-list-close-btn').addEventListener('click', () => {
+  document.getElementById('verb-list-overlay').setAttribute('hidden', '');
+});
+
+document.getElementById('verb-list-overlay').addEventListener('click', e => {
+  if (e.target === e.currentTarget) document.getElementById('verb-list-overlay').setAttribute('hidden', '');
+});
+
+document.getElementById('verb-search').addEventListener('input', e => {
+  buildVerbTable(e.target.value);
+});
+
 document.getElementById('start-btn').addEventListener('click', () => {
   practiceMode = false;
   showScreen('screen-game');
