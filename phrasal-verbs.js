@@ -420,7 +420,7 @@ function getWeakVerbs() {
 function updateWeakSection() {
   const weak = getWeakVerbs();
   const section = document.getElementById('weak-section');
-  if (weak.length === 0) {
+  if (weak.length < 2) {
     section.setAttribute('hidden', '');
     return;
   }
@@ -691,7 +691,14 @@ function showSummary() {
     list.appendChild(li);
   });
 
-  openModal(summaryOverlay, { firstFocus: document.getElementById('summary-next-btn') });
+  const nextBtn = document.getElementById('summary-next-btn');
+  nextBtn.hidden = practiceMode && getWeakVerbs().length < 2;
+
+  openModal(summaryOverlay, {
+    firstFocus: nextBtn.hidden
+      ? document.getElementById('summary-home-btn')
+      : nextBtn,
+  });
 }
 
 function hideSummary(returnFocus) {
