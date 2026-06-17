@@ -414,6 +414,20 @@ function updateWeakSection() {
 
 // ── Sound effects ─────────────────────────────────────────────────────────────
 
+let sfxEnabled = localStorage.getItem('verbitup-sfx') !== '0';
+
+function setSfx(val) {
+  sfxEnabled = val;
+  localStorage.setItem('verbitup-sfx', val ? '1' : '0');
+  const btn = document.getElementById('sound-toggle');
+  btn.setAttribute('data-sfx', val ? 'on' : 'off');
+  btn.setAttribute('aria-label', val ? 'Sound on' : 'Sound off');
+}
+
+document.getElementById('sound-toggle').addEventListener('click', () => setSfx(!sfxEnabled));
+
+if (!sfxEnabled) setSfx(false);
+
 let audioCtx = null;
 
 function getCtx() {
@@ -436,18 +450,22 @@ function playTone({ freq, type = 'sine', duration = 0.15, gain = 0.25, delay = 0
 }
 
 const soundCorrect = () => {
+  if (!sfxEnabled) return;
   playTone({ freq: 600, duration: 0.1 });
   playTone({ freq: 800, duration: 0.15, delay: 0.09 });
 };
 const soundWrong = () => {
+  if (!sfxEnabled) return;
   playTone({ freq: 180, type: 'square', duration: 0.18, gain: 0.15 });
 };
 const soundWin = () => {
+  if (!sfxEnabled) return;
   [523, 659, 784, 1047].forEach((freq, i) =>
     playTone({ freq, duration: 0.18, delay: i * 0.11 })
   );
 };
 const soundTimeUp = () => {
+  if (!sfxEnabled) return;
   playTone({ freq: 440, duration: 0.25 });
   playTone({ freq: 330, duration: 0.35, delay: 0.22 });
 };
@@ -474,6 +492,46 @@ function showScreen(id) {
   document.querySelector('header').classList.toggle('header-hidden', id === 'screen-start');
 }
 
+// ── Modal helpers ─────────────────────────────────────────────────────────────
+
+function openModal(overlayEl, { firstFocus, trigger } = {}) {
+  overlayEl.removeAttribute('hidden');
+  const toFocus = firstFocus ||
+    overlayEl.querySelector('button:not([disabled]), input, [tabindex]:not([tabindex="-1"])');
+  if (toFocus) toFocus.focus();
+  overlayEl._trigger = trigger || null;
+
+  function trapKeyDown(e) {
+    if (e.key === 'Escape') { closeModal(overlayEl); return; }
+    if (e.key !== 'Tab') return;
+    const focusable = [...overlayEl.querySelectorAll(
+      'button:not([disabled]), input:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )];
+    if (focusable.length < 2) return;
+    const first = focusable[0];
+    const last  = focusable[focusable.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault(); last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault(); first.focus();
+    }
+  }
+
+  overlayEl._trapKeyDown = trapKeyDown;
+  overlayEl.addEventListener('keydown', trapKeyDown);
+}
+
+function closeModal(overlayEl, returnFocus) {
+  overlayEl.setAttribute('hidden', '');
+  if (overlayEl._trapKeyDown) {
+    overlayEl.removeEventListener('keydown', overlayEl._trapKeyDown);
+    delete overlayEl._trapKeyDown;
+  }
+  const target = returnFocus !== undefined ? returnFocus : overlayEl._trigger;
+  if (target) target.focus();
+  delete overlayEl._trigger;
+}
+
 // ── Start screen ──────────────────────────────────────────────────────────────
 
 document.querySelector('header').classList.add('header-hidden');
@@ -481,20 +539,25 @@ updateWeakSection();
 
 document.querySelectorAll('.time-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.time-btn').forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-pressed', 'false');
+    });
     btn.classList.add('active');
+    btn.setAttribute('aria-pressed', 'true');
     selectedTime = parseInt(btn.dataset.time, 10);
   });
 });
 
+const grammarOverlay = document.getElementById('grammar-overlay');
 document.getElementById('grammar-btn').addEventListener('click', () => {
-  document.getElementById('grammar-overlay').removeAttribute('hidden');
+  openModal(grammarOverlay, { trigger: document.getElementById('grammar-btn') });
 });
 document.getElementById('grammar-close-btn').addEventListener('click', () => {
-  document.getElementById('grammar-overlay').setAttribute('hidden', '');
+  closeModal(grammarOverlay);
 });
-document.getElementById('grammar-overlay').addEventListener('click', e => {
-  if (e.target === e.currentTarget) document.getElementById('grammar-overlay').setAttribute('hidden', '');
+grammarOverlay.addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal(grammarOverlay);
 });
 
 // ── Verb list modal ───────────────────────────────────────────────────────────
@@ -511,19 +574,22 @@ function buildVerbTable(filter) {
   });
 }
 
+const verbListOverlay = document.getElementById('verb-list-overlay');
 document.getElementById('verb-list-btn').addEventListener('click', () => {
   document.getElementById('verb-search').value = '';
   buildVerbTable('');
-  document.getElementById('verb-list-overlay').removeAttribute('hidden');
-  document.getElementById('verb-search').focus();
+  openModal(verbListOverlay, {
+    firstFocus: document.getElementById('verb-search'),
+    trigger: document.getElementById('verb-list-btn'),
+  });
 });
 
 document.getElementById('verb-list-close-btn').addEventListener('click', () => {
-  document.getElementById('verb-list-overlay').setAttribute('hidden', '');
+  closeModal(verbListOverlay);
 });
 
-document.getElementById('verb-list-overlay').addEventListener('click', e => {
-  if (e.target === e.currentTarget) document.getElementById('verb-list-overlay').setAttribute('hidden', '');
+verbListOverlay.addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeModal(verbListOverlay);
 });
 
 document.getElementById('verb-search').addEventListener('input', e => {
@@ -558,6 +624,8 @@ document.getElementById('home-btn').addEventListener('click', goHome);
 
 // ── Modal ─────────────────────────────────────────────────────────────────────
 
+const genericOverlay = document.getElementById('modal-overlay');
+
 function showModal({ title, titleColor, borderColor, message, actions }) {
   document.getElementById('modal-title').textContent = title;
   document.getElementById('modal-title').style.color = `var(--${titleColor})`;
@@ -566,26 +634,30 @@ function showModal({ title, titleColor, borderColor, message, actions }) {
 
   const actionsEl = document.getElementById('modal-actions');
   actionsEl.innerHTML = '';
+  let firstBtn = null;
   actions.forEach(({ label, primary, onClick }) => {
     const btn = document.createElement('button');
     btn.className = `btn ${primary ? 'btn-primary' : 'btn-outline'}`;
     btn.textContent = label;
     btn.addEventListener('click', onClick);
     actionsEl.appendChild(btn);
+    if (!firstBtn) firstBtn = btn;
   });
 
-  document.getElementById('modal-overlay').removeAttribute('hidden');
+  openModal(genericOverlay, { firstFocus: firstBtn });
 }
 
 function hideModal() {
-  document.getElementById('modal-overlay').setAttribute('hidden', '');
+  closeModal(genericOverlay);
 }
 
-document.getElementById('modal-overlay').addEventListener('click', e => {
+genericOverlay.addEventListener('click', e => {
   if (e.target === e.currentTarget) hideModal();
 });
 
 // ── Round summary ─────────────────────────────────────────────────────────────
+
+const summaryOverlay = document.getElementById('summary-overlay');
 
 function showSummary() {
   const meta = selectedTime > 0
@@ -601,21 +673,22 @@ function showSummary() {
     list.appendChild(li);
   });
 
-  document.getElementById('summary-overlay').removeAttribute('hidden');
+  openModal(summaryOverlay, { firstFocus: document.getElementById('summary-next-btn') });
 }
 
-function hideSummary() {
-  document.getElementById('summary-overlay').setAttribute('hidden', '');
+function hideSummary(returnFocus) {
+  closeModal(summaryOverlay, returnFocus);
 }
 
 document.getElementById('summary-next-btn').addEventListener('click', () => {
-  hideSummary();
+  hideSummary(null);
   startRound();
 });
 
 document.getElementById('summary-home-btn').addEventListener('click', () => {
-  hideSummary();
+  hideSummary(null);
   goHome();
+  document.getElementById('start-btn').focus();
 });
 
 // ── Round management ──────────────────────────────────────────────────────────
@@ -645,6 +718,9 @@ function startRound(sameVerbs = false) {
   shuffle(roundData).forEach(item => defsList.appendChild(makeDefCard(item)));
 
   startTimer();
+
+  const firstCard = verbsList.querySelector('.verb-card');
+  if (firstCard) firstCard.focus();
 }
 
 // ── Timer ─────────────────────────────────────────────────────────────────────
@@ -681,16 +757,22 @@ function tick() {
 
 function handleTimeUp() {
   soundTimeUp();
-  document.querySelectorAll('.verb-card:not(.matched)').forEach(c => c.classList.add('frozen'));
-  document.querySelectorAll('.def-card:not(.matched)').forEach(c => c.classList.add('frozen'));
+  document.querySelectorAll('.verb-card:not(.matched)').forEach(c => {
+    c.classList.add('frozen');
+    c.tabIndex = -1;
+  });
+  document.querySelectorAll('.def-card:not(.matched)').forEach(c => {
+    c.classList.add('frozen');
+    c.tabIndex = -1;
+  });
   showModal({
-    title: '⏰ Time\'s up!',
+    title: "Time's up!",
     titleColor: 'red',
     borderColor: 'red',
     message: `You matched ${matched} of ${roundData.length} verbs.`,
     actions: [
       { label: 'Try Again', primary: true,  onClick: () => { hideModal(); startRound(true); } },
-      { label: 'Home',      primary: false, onClick: () => { hideModal(); goHome(); } },
+      { label: 'Home',      primary: false, onClick: () => { hideModal(); goHome(); document.getElementById('start-btn').focus(); } },
     ],
   });
 }
@@ -698,12 +780,13 @@ function handleTimeUp() {
 // ── Card factories ────────────────────────────────────────────────────────────
 
 function makeVerbCard(item) {
-  const card = document.createElement('div');
+  const card = document.createElement('button');
+  card.type        = 'button';
   card.className   = 'card verb-card';
   card.textContent = item.verb;
   card.dataset.id  = item.verb;
   card.draggable   = true;
-  card.tabIndex    = 0;
+  card.setAttribute('aria-pressed', 'false');
 
   card.addEventListener('dragstart', e => {
     draggedVerbId = item.verb;
@@ -719,27 +802,28 @@ function makeVerbCard(item) {
     if (card.classList.contains('matched') || card.classList.contains('frozen')) return;
     if (selectedVerbId === item.verb) {
       card.classList.remove('selected');
+      card.setAttribute('aria-pressed', 'false');
       selectedVerbId = null;
       return;
     }
-    document.querySelectorAll('.verb-card.selected').forEach(c => c.classList.remove('selected'));
+    document.querySelectorAll('.verb-card.selected').forEach(c => {
+      c.classList.remove('selected');
+      c.setAttribute('aria-pressed', 'false');
+    });
     card.classList.add('selected');
+    card.setAttribute('aria-pressed', 'true');
     selectedVerbId = item.verb;
-  });
-
-  card.addEventListener('keydown', e => {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
   });
 
   return card;
 }
 
 function makeDefCard(item) {
-  const card = document.createElement('div');
+  const card = document.createElement('button');
+  card.type        = 'button';
   card.className   = 'card def-card';
   card.textContent = item.def;
   card.dataset.id  = item.verb;
-  card.tabIndex    = 0;
 
   card.addEventListener('dragover', e => {
     e.preventDefault();
@@ -759,28 +843,29 @@ function makeDefCard(item) {
     attemptMatch(selectedVerbId, item.verb, card);
   });
 
-  card.addEventListener('keydown', e => {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); card.click(); }
-  });
-
   return card;
 }
 
 // ── Match logic ───────────────────────────────────────────────────────────────
 
 function attemptMatch(verbId, defId, defCard) {
+  const statusEl = document.getElementById('match-status');
   if (verbId === defId) {
     const verbCard = document.querySelector(`.verb-card[data-id="${verbId}"]`);
     if (verbCard) {
       verbCard.classList.remove('selected');
       verbCard.classList.add('matched');
+      verbCard.setAttribute('aria-pressed', 'false');
       verbCard.draggable = false;
+      verbCard.tabIndex  = -1;
     }
     defCard.classList.add('matched');
+    defCard.tabIndex = -1;
     selectedVerbId = null;
     recordCorrect(verbId);
     soundCorrect();
     document.getElementById('score').textContent = ++matched;
+    statusEl.textContent = `Correct! Score: ${matched} of ${roundData.length}.`;
 
     if (matched === roundData.length) {
       clearInterval(timerInterval);
@@ -790,6 +875,7 @@ function attemptMatch(verbId, defId, defCard) {
   } else {
     recordMistake(verbId);
     soundWrong();
+    statusEl.textContent = 'Incorrect, try again.';
     defCard.classList.add('wrong');
     defCard.addEventListener('animationend', () => defCard.classList.remove('wrong'), { once: true });
   }

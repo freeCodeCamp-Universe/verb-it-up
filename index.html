@@ -11,11 +11,20 @@
 </head>
 <body>
 
-<button id="theme-toggle" class="theme-toggle" aria-label="Switch to light theme">☀️</button>
+<a href="#main-content" class="skip-link">Skip to main content</a>
+<div class="header-actions">
+  <button id="sound-toggle" class="btn-sound" aria-label="Sound on" data-sfx="on">
+    <span class="sfx-on" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M48 352l48 0 134.1 119.2c6.4 5.7 14.6 8.8 23.1 8.8 19.2 0 34.8-15.6 34.8-34.8l0-378.4c0-19.2-15.6-34.8-34.8-34.8-8.5 0-16.7 3.1-23.1 8.8L96 160 48 160c-26.5 0-48 21.5-48 48l0 96c0 26.5 21.5 48 48 48zM441.1 107c-10.3-8.4-25.4-6.8-33.8 3.5s-6.8 25.4 3.5 33.8C443.3 170.7 464 210.9 464 256s-20.7 85.3-53.2 111.8c-10.3 8.4-11.8 23.5-3.5 33.8s23.5 11.8 33.8 3.5c43.2-35.2 70.9-88.9 70.9-149s-27.7-113.8-70.9-149zm-60.5 74.5c-10.3-8.4-25.4-6.8-33.8 3.5s-6.8 25.4 3.5 33.8C361.1 227.6 368 241 368 256s-6.9 28.4-17.7 37.3c-10.3 8.4-11.8 23.5-3.5 33.8s23.5 11.8 33.8 3.5C402.1 312.9 416 286.1 416 256s-13.9-56.9-35.5-74.5z"/></svg></span>
+    <span class="sfx-off" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.--><path d="M48 352l48 0 134.1 119.2c6.4 5.7 14.6 8.8 23.1 8.8 19.2 0 34.8-15.6 34.8-34.8l0-378.4c0-19.2-15.6-34.8-34.8-34.8-8.5 0-16.7 3.1-23.1 8.8L96 160 48 160c-26.5 0-48 21.5-48 48l0 96c0 26.5 21.5 48 48 48zM367 175c-9.4 9.4-9.4 24.6 0 33.9l47 47-47 47c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l47-47 47 47c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-47-47 47-47c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0l-47 47-47-47c-9.4-9.4-24.6-9.4-33.9 0z"/></svg></span>
+  </button>
+  <button id="theme-toggle" class="theme-toggle" aria-label="Switch to light theme">☀️</button>
+</div>
 
 <header>
   <h1>Verb It Up</h1>
 </header>
+
+<main id="main-content">
 
 <!-- ── Start screen ── -->
 <div id="screen-start" class="screen active">
@@ -30,24 +39,24 @@
       <p class="tagline-sub">Match each phrasal verb to its definition before time runs out.</p>
 
       <ul class="how-to">
-        <li>💡 Drag a verb card onto its definition</li>
-        <li>👆 Or click a verb, then click a definition</li>
-        <li>🔢 5 verbs per round</li>
+        <li><span aria-hidden="true">💡</span> Drag a verb card onto its definition</li>
+        <li><span aria-hidden="true">👆</span> Or click a verb, then click a definition</li>
+        <li><span aria-hidden="true">🔢</span> 5 verbs per round</li>
       </ul>
 
-      <div class="time-section">
-        <p class="section-label">Time limit</p>
+      <fieldset class="time-section">
+        <legend class="section-label">Time limit</legend>
         <div class="time-options">
-          <button class="time-btn active" data-time="0">No timer</button>
-          <button class="time-btn" data-time="30">30 s</button>
-          <button class="time-btn" data-time="60">60 s</button>
-          <button class="time-btn" data-time="90">90 s</button>
+          <button class="time-btn active" data-time="0" aria-pressed="true">No timer</button>
+          <button class="time-btn" data-time="30" aria-pressed="false">30 s</button>
+          <button class="time-btn" data-time="60" aria-pressed="false">60 s</button>
+          <button class="time-btn" data-time="90" aria-pressed="false">90 s</button>
         </div>
-      </div>
+      </fieldset>
 
       <div id="weak-section" class="weak-section" hidden>
         <div class="weak-header">
-          <span>⚠️ Needs repetition</span>
+          <span><span aria-hidden="true">⚠️</span> Needs repetition</span>
           <button class="weak-clear" id="weak-clear-btn">Clear</button>
         </div>
         <p id="weak-list" class="weak-list"></p>
@@ -57,8 +66,8 @@
       <button class="btn btn-primary btn-lg" id="start-btn">Start</button>
 
       <div class="ghost-btns">
-        <button class="btn btn-ghost" id="grammar-btn">📚 Grammar note</button>
-        <button class="btn btn-ghost" id="verb-list-btn">📋 Phrasal verbs list</button>
+        <button class="btn btn-ghost" id="grammar-btn"><span aria-hidden="true">📚</span> Grammar note</button>
+        <button class="btn btn-ghost" id="verb-list-btn"><span aria-hidden="true">📋</span> Phrasal verbs list</button>
       </div>
     </div>
     </div>
@@ -67,14 +76,14 @@
 
 <!-- ── Game screen ── -->
 <div id="screen-game" class="screen">
-  <main>
+  <div class="game-main">
     <div class="game-toolbar">
-      <div class="score">Score: <strong id="score">0</strong> / <span id="total">5</span></div>
-      <div id="timer-display" class="timer-display"></div>
       <button class="btn btn-outline" id="home-btn">&#8592; Home</button>
+      <div id="timer-display" class="timer-display" role="timer"></div>
+      <div class="score">Score: <strong id="score">0</strong> / <span id="total">5</span></div>
     </div>
 
-    <p class="hint">Drag a phrasal verb onto its definition — or click a verb, then click a definition.</p>
+    <p class="hint">Drag a phrasal verb onto its definition, or click a verb, then click a definition.</p>
 
     <div class="columns">
       <div>
@@ -87,27 +96,34 @@
       </div>
     </div>
 
-  </main>
+  </div>
 </div>
+
+</main>
+
+<div id="match-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
 
 <!-- ── Grammar modal ── -->
 <div id="grammar-overlay" class="modal-overlay" hidden>
-  <div class="modal grammar-modal" role="dialog" aria-modal="true">
-    <h2>📚 Grammar note</h2>
+  <div class="modal grammar-modal" role="dialog" aria-modal="true" aria-labelledby="grammar-modal-title">
+    <h2 id="grammar-modal-title"><span aria-hidden="true">📚</span> Grammar note</h2>
     <div class="grammar-body">
       <p>A <strong>phrasal verb</strong> is a verb combined with a particle (preposition or adverb) that together carry a new meaning, often unrelated to the individual words.</p>
       <ul>
         <li>
-          <span class="li-label"><strong>Separable:</strong> the object can go between the verb and particle:</span><br>
+          <strong>Separable</strong><br>
+          The object can go between the verb and particle:<br>
           <em>turn off the TV</em> → <em>turn the TV off</em>
         </li>
         <li>
-          <span class="li-label"><strong>Inseparable:</strong> the object must follow the full phrasal verb:</span><br>
+          <strong>Inseparable</strong><br>
+          The object must follow the full phrasal verb:<br>
           <em>come across an old friend</em> ✓<br>
           <em>come an old friend across</em> ✗
         </li>
         <li>
-          <span class="li-label"><strong>Intransitive:</strong> some take no object at all:</span><br>
+          <strong>Intransitive</strong><br>
+          Some take no object at all:<br>
           <em>The engine broke down.</em>
         </li>
       </ul>
@@ -120,13 +136,14 @@
 
 <!-- ── Verb list modal ── -->
 <div id="verb-list-overlay" class="modal-overlay" hidden>
-  <div class="modal verb-list-modal" role="dialog" aria-modal="true">
-    <h2>📋 All Phrasal Verbs</h2>
+  <div class="modal verb-list-modal" role="dialog" aria-modal="true" aria-labelledby="verb-list-modal-title">
+    <h2 id="verb-list-modal-title"><span aria-hidden="true">📋</span> All Phrasal Verbs</h2>
+    <label for="verb-search" class="sr-only">Search phrasal verbs and definitions</label>
     <input type="text" id="verb-search" class="verb-search" placeholder="Search verbs or definitions…" autocomplete="off">
     <div class="verb-list-scroll">
       <table id="verb-table">
         <thead>
-          <tr><th>Phrasal Verb</th><th>Definition</th></tr>
+          <tr><th scope="col">Phrasal Verb</th><th scope="col">Definition</th></tr>
         </thead>
         <tbody id="verb-table-body"></tbody>
       </table>
@@ -139,8 +156,8 @@
 
 <!-- ── Round summary modal ── -->
 <div id="summary-overlay" class="modal-overlay" hidden>
-  <div class="modal summary-modal" role="dialog" aria-modal="true">
-    <h2 class="summary-heading">🎉 Round complete</h2>
+  <div class="modal summary-modal" role="dialog" aria-modal="true" aria-labelledby="summary-modal-title">
+    <h2 id="summary-modal-title" class="summary-heading"><span aria-hidden="true">🎉</span> Round complete</h2>
     <p id="summary-meta" class="summary-meta"></p>
     <ul id="summary-list" class="summary-list"></ul>
     <div class="modal-actions">
@@ -152,7 +169,7 @@
 
 <!-- ── Modal ── -->
 <div id="modal-overlay" class="modal-overlay" hidden>
-  <div class="modal" id="modal" role="dialog" aria-modal="true">
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
     <h2 id="modal-title"></h2>
     <p id="modal-msg"></p>
     <div class="modal-actions" id="modal-actions"></div>
