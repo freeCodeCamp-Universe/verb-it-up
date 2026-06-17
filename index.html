@@ -69,6 +69,7 @@
         <button class="btn btn-ghost" id="grammar-btn"><span aria-hidden="true">📚</span> Grammar note</button>
         <button class="btn btn-ghost" id="verb-list-btn"><span aria-hidden="true">📋</span> Phrasal verbs list</button>
       </div>
+      <p class="progress-label" id="progress-label"></p>
     </div>
     </div>
   </div>
@@ -157,6 +158,7 @@
 <!-- ── Round summary modal ── -->
 <div id="summary-overlay" class="modal-overlay" hidden>
   <div class="modal summary-modal" role="dialog" aria-modal="true" aria-labelledby="summary-modal-title">
+    <button class="modal-close" id="summary-close-btn" aria-label="Close and review board">&times;</button>
     <h2 id="summary-modal-title" class="summary-heading"><span aria-hidden="true">🎉</span> Round complete</h2>
     <p id="summary-meta" class="summary-meta"></p>
     <ul id="summary-list" class="summary-list"></ul>

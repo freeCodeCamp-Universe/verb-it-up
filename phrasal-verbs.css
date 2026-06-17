@@ -183,6 +183,13 @@ header h1 {
 }
 
 /* ── Ghost button ── */
+.progress-label {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.9rem;
+}
+
 .ghost-btns {
   display: flex;
   flex-direction: row;
@@ -449,7 +456,7 @@ button.card {
 
 .verb-card.matched::after,
 .def-card.matched::after {
-  content: '✓';
+  content: '✓' / '';
   position: absolute;
   top: 0.25rem;
   right: 0.4rem;
@@ -577,6 +584,7 @@ button.card {
 .modal-overlay[hidden] { display: none; }
 
 .modal {
+  position: relative;
   background: var(--bg-secondary);
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -586,6 +594,23 @@ button.card {
   text-align: center;
   animation: modal-in 0.2s ease;
 }
+
+.modal-close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  line-height: 1;
+  padding: 0.2rem 0.45rem;
+  cursor: pointer;
+  font-family: inherit;
+}
+.modal-close:hover { border-color: var(--red); color: var(--red); }
+.modal-close:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 
 @keyframes modal-in {
   from { transform: scale(0.92); opacity: 0; }

@@ -335,6 +335,7 @@ const DATA = [
 
 const ROUND_SIZE    = 5;
 const STORAGE_KEY   = 'verbitup-mistakes';
+const SEEN_KEY      = 'verbitup-seen';
 
 // ── Theme toggle ──────────────────────────────────────────────────────────────
 
@@ -377,6 +378,22 @@ let practiceMode   = false;
 
 const loadMistakes = () => JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
 const saveMistakes = obj => localStorage.setItem(STORAGE_KEY, JSON.stringify(obj));
+
+const loadSeen = () => new Set(JSON.parse(localStorage.getItem(SEEN_KEY) || '[]'));
+const saveSeen = set => localStorage.setItem(SEEN_KEY, JSON.stringify([...set]));
+
+function markSeen(items) {
+  const seen = loadSeen();
+  items.forEach(item => seen.add(item.verb));
+  saveSeen(seen);
+  updateProgress();
+}
+
+function updateProgress() {
+  const count = loadSeen().size;
+  document.getElementById('progress-label').textContent =
+    `${count} / ${DATA.length} verbs practiced`;
+}
 
 function recordMistake(verb) {
   const m = loadMistakes();
@@ -536,6 +553,7 @@ function closeModal(overlayEl, returnFocus) {
 
 document.querySelector('header').classList.add('header-hidden');
 updateWeakSection();
+updateProgress();
 
 document.querySelectorAll('.time-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -680,6 +698,10 @@ function hideSummary(returnFocus) {
   closeModal(summaryOverlay, returnFocus);
 }
 
+document.getElementById('summary-close-btn').addEventListener('click', () => {
+  hideSummary(document.getElementById('home-btn'));
+});
+
 document.getElementById('summary-next-btn').addEventListener('click', () => {
   hideSummary(null);
   startRound();
@@ -702,6 +724,7 @@ function startRound(sameVerbs = false) {
   if (!sameVerbs) {
     const pool = practiceMode ? getWeakVerbs() : DATA;
     roundData = shuffle(pool).slice(0, ROUND_SIZE);
+    markSeen(roundData);
   }
 
   document.getElementById('score').textContent = '0';
