@@ -14,6 +14,27 @@
   --blue:          #99c9ff;
   --purple:        #dbb8ff;
   --focus-ring:    #198eee;
+  --tint-yellow:   #231e06;
+  --tint-blue:     #152030;
+  --tint-red:      #2a1515;
+}
+
+[data-theme="light"] {
+  --bg-primary:    #ffffff;
+  --bg-secondary:  #f5f6f7;
+  --bg-surface:    #dfdfe2;
+  --border:        #3b3b4f;
+  --text-primary:  #0a0a23;
+  --text-secondary:#1b1b32;
+  --text-muted:    #858591;
+  --yellow:        #4d3800;
+  --green:         #00471b;
+  --red:           #850000;
+  --blue:          #002ead;
+  --purple:        #5a01a7;
+  --tint-yellow:   #fff8e0;
+  --tint-blue:     #e6f0ff;
+  --tint-red:      #fff0f0;
 }
 
 html { font-size: 18px; }
@@ -136,20 +157,21 @@ header h1 {
 /* ── Ghost button ── */
 .ghost-btns {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-  margin-bottom: 1.5rem;
+  flex-direction: row;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
 }
 
 .btn-ghost {
-  background: transparent;
+  background: var(--bg-surface);
   border: none;
   color: var(--text-primary);
   font-size: 0.85rem;
   font-weight: 700;
+  white-space: nowrap;
 }
-.btn-ghost:hover { opacity: 1; color: var(--text-primary); }
+.btn-ghost:hover { opacity: 1; background: var(--border); }
 
 /* ── Problem verbs section ── */
 .weak-section {
@@ -269,7 +291,7 @@ header h1 {
 .time-btn.active {
   border-color: var(--yellow);
   color: var(--yellow);
-  background: #231e06;
+  background: var(--tint-yellow);
 }
 
 .time-btn:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
@@ -392,7 +414,7 @@ main {
 
 .verb-card.selected {
   border-color: var(--blue);
-  background: #152030;
+  background: var(--tint-blue);
   box-shadow: 0 0 0 2px var(--blue);
 }
 
@@ -424,7 +446,7 @@ main {
 
 .def-card.drag-over {
   border-color: var(--blue);
-  background: #152030;
+  background: var(--tint-blue);
 }
 
 .def-card.matched {
@@ -435,7 +457,7 @@ main {
 
 .def-card.wrong {
   border-color: var(--red);
-  background: #2a1515;
+  background: var(--tint-red);
   animation: shake 0.35s ease;
 }
 
@@ -609,6 +631,31 @@ main {
 #verb-table td:last-child { color: var(--text-secondary); }
 
 #verb-table tbody tr:hover td { background: var(--bg-surface); }
+
+[data-theme="light"] .btn-primary { background: #f1be32; color: #0a0a23; }
+
+/* ── Theme toggle ── */
+.theme-toggle {
+  position: fixed;
+  top: 14px;
+  right: 16px;
+  width: 32px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0;
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 100;
+  transition: border-color 0.15s;
+}
+.theme-toggle:hover { border-color: var(--yellow); }
+.theme-toggle:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 
 /* ── Responsive ── */
 @media (max-width: 700px) {

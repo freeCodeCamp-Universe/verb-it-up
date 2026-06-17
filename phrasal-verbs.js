@@ -336,6 +336,34 @@ const DATA = [
 const ROUND_SIZE    = 5;
 const STORAGE_KEY   = 'verbitup-mistakes';
 
+// ── Theme toggle ──────────────────────────────────────────────────────────────
+
+(function () {
+  const btn = document.getElementById('theme-toggle');
+
+  function applyTheme(isLight) {
+    if (isLight) {
+      document.documentElement.dataset.theme = 'light';
+      btn.textContent = '🌙';
+      btn.setAttribute('aria-label', 'Switch to dark theme');
+    } else {
+      delete document.documentElement.dataset.theme;
+      btn.textContent = '☀️';
+      btn.setAttribute('aria-label', 'Switch to light theme');
+    }
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  }
+
+  btn.addEventListener('click', () => {
+    applyTheme(document.documentElement.dataset.theme !== 'light');
+  });
+
+  if (document.documentElement.dataset.theme === 'light') {
+    btn.textContent = '🌙';
+    btn.setAttribute('aria-label', 'Switch to dark theme');
+  }
+})();
+
 let matched        = 0;
 let selectedVerbId = null;
 let draggedVerbId  = null;
