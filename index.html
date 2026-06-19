@@ -70,7 +70,10 @@
         <button class="btn btn-ghost" id="grammar-btn"><span aria-hidden="true">📚</span> Grammar note</button>
         <button class="btn btn-ghost" id="verb-list-btn"><span aria-hidden="true">📋</span> Phrasal verbs list</button>
       </div>
-      <p class="progress-label" id="progress-label"></p>
+      <div class="progress-row">
+        <p class="progress-label" id="progress-label"></p>
+        <button class="progress-reset" id="progress-reset-btn" aria-label="Reset progress" hidden>⟳</button>
+      </div>
     </div>
     </div>
   </div>
@@ -111,6 +114,7 @@
 <!-- ── Grammar modal ── -->
 <div id="grammar-overlay" class="modal-overlay" hidden>
   <div class="modal grammar-modal" role="dialog" aria-modal="true" aria-labelledby="grammar-modal-title">
+    <button class="modal-close" id="grammar-modal-close-btn" aria-label="Close">&times;</button>
     <h2 id="grammar-modal-title"><span aria-hidden="true">📚</span> Grammar note</h2>
     <div class="grammar-body">
       <p>A <strong>phrasal verb</strong> is a verb combined with a particle (preposition or adverb) that together carry a new meaning, often unrelated to the individual words.</p>
@@ -142,6 +146,7 @@
 <!-- ── Verb list modal ── -->
 <div id="verb-list-overlay" class="modal-overlay" hidden>
   <div class="modal verb-list-modal" role="dialog" aria-modal="true" aria-labelledby="verb-list-modal-title">
+    <button class="modal-close" id="verb-list-modal-close-btn" aria-label="Close">&times;</button>
     <h2 id="verb-list-modal-title"><span aria-hidden="true">📋</span> All Phrasal Verbs</h2>
     <label for="verb-search" class="sr-only">Search phrasal verbs and definitions</label>
     <input type="text" id="verb-search" class="verb-search" placeholder="Search verbs or definitions…" autocomplete="off">
@@ -176,6 +181,7 @@
 <!-- ── Modal ── -->
 <div id="modal-overlay" class="modal-overlay" hidden>
   <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <button class="modal-close" id="modal-close-btn" aria-label="Close">&times;</button>
     <h2 id="modal-title"></h2>
     <p id="modal-msg"></p>
     <div class="modal-actions" id="modal-actions"></div>

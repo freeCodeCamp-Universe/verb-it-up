@@ -393,6 +393,7 @@ function updateProgress() {
   const count = loadSeen().size;
   document.getElementById('progress-label').textContent =
     `${count} / ${DATA.length} verbs practiced`;
+  document.getElementById('progress-reset-btn').hidden = count === 0;
 }
 
 function recordMistake(verb) {
@@ -574,6 +575,9 @@ document.getElementById('grammar-btn').addEventListener('click', () => {
 document.getElementById('grammar-close-btn').addEventListener('click', () => {
   closeModal(grammarOverlay);
 });
+document.getElementById('grammar-modal-close-btn').addEventListener('click', () => {
+  closeModal(grammarOverlay);
+});
 grammarOverlay.addEventListener('click', e => {
   if (e.target === e.currentTarget) closeModal(grammarOverlay);
 });
@@ -605,6 +609,9 @@ document.getElementById('verb-list-btn').addEventListener('click', () => {
 document.getElementById('verb-list-close-btn').addEventListener('click', () => {
   closeModal(verbListOverlay);
 });
+document.getElementById('verb-list-modal-close-btn').addEventListener('click', () => {
+  closeModal(verbListOverlay);
+});
 
 verbListOverlay.addEventListener('click', e => {
   if (e.target === e.currentTarget) closeModal(verbListOverlay);
@@ -631,6 +638,25 @@ document.getElementById('weak-clear-btn').addEventListener('click', () => {
   updateWeakSection();
 });
 
+document.getElementById('progress-reset-btn').addEventListener('click', function () {
+  showModal({
+    title: 'Reset progress?',
+    titleColor: 'text-primary',
+    borderColor: 'border',
+    message: `This will clear your record of ${loadSeen().size} practiced verbs.`,
+    trigger: this,
+    actions: [
+      { label: 'Cancel', primary: false, onClick: hideModal },
+      { label: 'Reset',  danger: true,   onClick: () => {
+          localStorage.removeItem(SEEN_KEY);
+          updateProgress();
+          hideModal();
+        }
+      },
+    ],
+  });
+});
+
 // ── Navigation ────────────────────────────────────────────────────────────────
 
 function goHome() {
@@ -644,7 +670,7 @@ document.getElementById('home-btn').addEventListener('click', goHome);
 
 const genericOverlay = document.getElementById('modal-overlay');
 
-function showModal({ title, titleColor, borderColor, message, actions }) {
+function showModal({ title, titleColor, borderColor, message, actions, trigger }) {
   document.getElementById('modal-title').textContent = title;
   document.getElementById('modal-title').style.color = `var(--${titleColor})`;
   document.getElementById('modal-msg').textContent   = message;
@@ -653,16 +679,16 @@ function showModal({ title, titleColor, borderColor, message, actions }) {
   const actionsEl = document.getElementById('modal-actions');
   actionsEl.innerHTML = '';
   let firstBtn = null;
-  actions.forEach(({ label, primary, onClick }) => {
+  actions.forEach(({ label, primary, danger, onClick }) => {
     const btn = document.createElement('button');
-    btn.className = `btn ${primary ? 'btn-primary' : 'btn-outline'}`;
+    btn.className = `btn ${danger ? 'btn-danger' : primary ? 'btn-primary' : 'btn-outline'}`;
     btn.textContent = label;
     btn.addEventListener('click', onClick);
     actionsEl.appendChild(btn);
     if (!firstBtn) firstBtn = btn;
   });
 
-  openModal(genericOverlay, { firstFocus: firstBtn });
+  openModal(genericOverlay, { firstFocus: firstBtn, trigger });
 }
 
 function hideModal() {
@@ -672,6 +698,8 @@ function hideModal() {
 genericOverlay.addEventListener('click', e => {
   if (e.target === e.currentTarget) hideModal();
 });
+
+document.getElementById('modal-close-btn').addEventListener('click', hideModal);
 
 // ── Round summary ─────────────────────────────────────────────────────────────
 

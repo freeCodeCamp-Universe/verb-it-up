@@ -183,12 +183,28 @@ header h1 {
 }
 
 /* ── Ghost button ── */
-.progress-label {
-  text-align: center;
-  font-size: 0.75rem;
-  color: var(--text-muted);
+.progress-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   margin-top: 0.9rem;
 }
+.progress-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.progress-reset {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+}
+.progress-reset:hover { color: var(--red); }
 
 .ghost-btns {
   display: flex;
@@ -352,6 +368,7 @@ fieldset.time-section {
 .btn:focus-visible { outline: 2px solid var(--focus-ring); outline-offset: 2px; }
 
 .btn-primary { background: var(--yellow); color: var(--bg-primary); }
+.btn-danger  { background: var(--red);    color: var(--bg-primary); }
 
 .btn-outline {
   background: transparent;
